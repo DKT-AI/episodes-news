@@ -1,39 +1,59 @@
 # Episode #89: DevOps Дайджест 89
 
 ## Introduction
-Привет, дорогие слушатели! С вами DevOps Kitchen Talks, и это 89-й выпуск нашего дайджеста. Сегодня мы обсудим сравнение топовых DevOps-платформ 2025 года, преимущества Cilium с eBPF на bare metal и миграцию с Terraform на OpenTofu.
+Привет, друзья! С вами DevOps Kitchen Talks, и это 89-й выпуск нашего дайджеста. Сегодня обсудим производительность Cilium на bare metal, миграцию с Terraform на OpenTofu, а также сравним топовые DevOps-платформы и стратегии автоматизации CI/CD в 2025 году.
 
 ## News
 
-### 1. Top 10 DevOps Platforms in 2025: GitLab CI/CD vs GitHub Actions vs CircleCI vs Devtron
-Обзор десяти лучших DevOps-платформ 2025 года, которые интегрируют infrastructure as code, сканирование безопасности и оркестрацию релизов.
-
-**Link:** https://medium.com/@yashbatra11111/top-10-devops-platforms-in-2025-gitlab-ci-cd-vs-github-actions-vs-circleci-vs-devtron-2afb3d4e921a
-
-**Talking Points:**
-- Какие критерии наиболее важны при выборе CI/CD платформы в 2025 году: интеграция с IaC, встроенная безопасность или удобство оркестрации релизов?
-- GitHub Actions vs GitLab CI/CD: как изменился баланс сил между этими платформами, и какие сценарии использования лучше подходят для каждой из них?
-- Появление новых игроков вроде Devtron и Spacelift: какие инновации они привносят на рынок DevOps-платформ и стоит ли рассматривать их как альтернативу классическим решениям?
-
-### 2. Why Running Cilium with eBPF on Bare Metal Outperforms Virtualized Overlay Networks
-Анализ производительности Cilium с eBPF на bare metal в сравнении с виртуализированными overlay-сетями.
+### 1. Why Running Cilium with eBPF on Bare Metal Outperforms Virtualized Overlay Networks
+Cilium с eBPF на bare metal OpenMetal превосходит виртуализированные облака за счёт устранения двойной инкапсуляции. Прямая маршрутизация L2, Jumbo Frames (MTU 9000) и 20 Gbps снижают задержки на 100-300 мкс, экономят 5-15% CPU и устраняют расходы на egress-трафик.
 
 **Link:** https://openmetal.io/resources/blog/why-running-cilium-with-ebpf-on-bare-metal-outperforms-virtualized-overlay-networks
 
 **Talking Points:**
-- Устранение двойной инкапсуляции: насколько критична проблема overhead в виртуализированных облаках и в каких сценариях это становится узким местом?
-- Конкретные цифры производительности: снижение задержек на 100-300 мкс и экономия 5-15% CPU — для каких типов приложений эти улучшения будут наиболее заметны?
-- Экономика bare metal vs облако: устранение расходов на egress-трафик и использование Jumbo Frames — достаточно ли этих преимуществ для возврата к bare metal инфраструктуре?
+- Как двойная инкапсуляция в виртуализированных средах влияет на производительность сети и почему bare metal решает эту проблему
+- Практические преимущества использования Jumbo Frames с MTU 9000 и прямой L2-маршрутизации для высоконагруженных приложений
+- Экономия на egress-трафике и CPU: в каких сценариях переход на bare metal с Cilium наиболее оправдан
 
-### 3. From Terraform to OpenTofu: A Migration Guide
-Руководство по миграции с Terraform на OpenTofu — открытый форк с лицензией MPL 2.0 под управлением Linux Foundation.
+### 2. Terraform to OpenTofu Migration Guide 2025 | ControlMonkey
+Миграция с Terraform на OpenTofu для версий ниже 1.6 проста: замените команду `terraform` на `tofu`. Выполните `tofu init -upgrade` и `tofu apply`. Важно: избегайте прямых ссылок на реестр HashiCorp, используйте короткие имена провайдеров. Сложность возникает при масштабировании на сотни стеков.
+
+**Link:** https://controlmonkey.io/blog/opentofu-migration
+
+**Talking Points:**
+- Насколько действительно проста миграция для небольших проектов и какие подводные камни могут возникнуть с версиями Terraform 1.6+
+- Проблемы масштабирования миграции на сотни стеков: автоматизация процесса и управление зависимостями провайдеров
+- Стратегии работы с реестром провайдеров: почему важно избегать прямых ссылок на HashiCorp и как правильно настроить альтернативные источники
+
+### 3. From Terraform to OpenTofu: A Migration Guide | Blog | StackGuardian
+OpenTofu — форк Terraform 1.5.x с лицензией MPL 2.0, управляемый Linux Foundation. Обеспечивает полную обратную совместимость с Terraform до версии 1.6, включает шифрование state-файлов, поддержку переменных в backend-конфигурациях и for_each для провайдеров.
 
 **Link:** https://www.stackguardian.io/post/from-terraform-to-opentofu-a-migration-guide
 
 **Talking Points:**
-- Обратная совместимость с Terraform до версии 1.6: насколько безболезненной будет миграция для существующих проектов и какие подводные камни могут возникнуть?
-- Новые возможности OpenTofu: шифрование state-файлов, переменные в backend-конфигурациях и for_each для провайдеров — какие из этих фич наиболее востребованы в реальных проектах?
-- Стратегия миграции: стоит ли переходить на OpenTofu прямо сейчас или лучше подождать большей зрелости проекта, учитывая управление со стороны Linux Foundation?
+- Ключевые новые возможности OpenTofu: шифрование state-файлов и переменные в backend — как это улучшает безопасность и гибкость
+- Обратная совместимость до Terraform 1.6: что происходит с проектами на более новых версиях и стоит ли ждать дальнейшего развития OpenTofu
+- Роль Linux Foundation в развитии проекта и перспективы открытой экосистемы IaC-инструментов
+
+### 4. Top 10 DevOps Platforms in 2025: GitLab CI/CD vs GitHub Actions vs CircleCI vs Devtron
+В 2025 году лучшие DevOps-платформы интегрируют infrastructure as code, сканирование безопасности и оркестрацию релизов. Статья сравнивает GitLab CI/CD, GitHub Actions, CircleCI, Devtron, Jenkins, Azure DevOps, Spacelift, Octopus Deploy, Harness и Buddy для выбора оптимального CI/CD решения.
+
+**Link:** https://medium.com/@yashbatra11111/top-10-devops-platforms-in-2025-gitlab-ci-cd-vs-github-actions-vs-circleci-vs-devtron-2afb3d4e921a
+
+**Talking Points:**
+- Критерии выбора DevOps-платформы в 2025: что важнее — интеграция с экосистемой, встроенная безопасность или гибкость настройки
+- Сравнение популярных решений: GitHub Actions для простоты, GitLab для полноты функций, или специализированные платформы типа Harness и Devtron
+- Тренды интеграции IaC и security scanning непосредственно в CI/CD: как это меняет подход к построению конвейеров
+
+### 5. CI/CD Pipeline Guide: 2025 DevOps Automation Strategies
+Современная CI/CD-конвейер автоматизирует сборку, тестирование и развертывание приложений. Популярные инструменты: Jenkins, GitHub Actions, GitLab CI/CD, Azure DevOps. Лучшие практики включают модульные конвейеры для микросервисов, интеграцию безопасности и непрерывную обратную связь.
+
+**Link:** https://mantraideas.com/cicd-pipeline-implementation-guide-2025
+
+**Talking Points:**
+- Модульные конвейеры для микросервисной архитектуры: как правильно организовать независимые pipeline и избежать монолитных конфигураций
+- Shift-left security: интеграция сканирования уязвимостей и compliance-проверок на ранних этапах CI/CD
+- Непрерывная обратная связь и метрики: какие KPI действительно важны для оценки эффективности автоматизации развертывания
 
 ## Conclusion
-Спасибо, что были с нами в этом выпуске! Подписывайтесь на наш подкаст, делитесь с коллегами и до встречи в следующем дайджесте!
+На этом наш 89-й выпуск подходит к концу. Спасибо, что были с нами — следите за новостями DevOps, и до встречи в следующем дайджесте!
